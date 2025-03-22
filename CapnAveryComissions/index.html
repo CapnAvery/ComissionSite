@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medieval Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet" />
+  <style>
+    /* Global resets and container */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f5e1c7 url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      background-size: cover;
+      color: #333;
+      font-family: Georgia, serif;
+      font-size: clamp(1rem, 1.5vw, 1.5rem);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    /* Navigation */
+    nav {
+      background: rgba(51, 51, 51, 0.8);
+      padding: 10px 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+    nav.scrolled {
+      background: rgba(51, 51, 51, 1);
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+    nav ul li {
+      margin: 0 15px;
+    }
+    nav ul li a {
+      color: #f5e1c7;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-family: 'MedievalSharp', cursive;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+    nav ul li a:hover {
+      color: #d4af37;
+      text-shadow: 1px 1px 2px #000;
+    }
+    /* Section styles */
+    section {
+      padding: 60px 0;
+      min-height: 60vh;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease-out;
+    }
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    h1 {
+      font-family: 'MedievalSharp', cursive;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 20px;
+    }
+    p {
+      line-height: 1.6;
+      font-size: clamp(1rem, 1.5vw, 1.5rem);
+    }
+    /* Combined About & Contact Section */
+    #about {
+      background: rgba(245, 225, 199, 0.8);
+    }
+    #about .about-contact-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #about .about-contact-text {
+      flex: 1 1 45%;
+      padding: 20px;
+    }
+    #about .about-contact-text h1 {
+      margin-top: 0;
+    }
+    #about .contact-details {
+      margin-top: 30px;
+    }
+    #about .contact-details h2 {
+      font-family: 'MedievalSharp', cursive;
+      color: #d4af37;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    #about .contact-details iframe {
+      border: none;
+      width: 100%;
+      max-width: 300px;
+      height: 60px;
+      transition: height 0.3s, width 0.3s;
+    }
+    #about .contact-details iframe:hover {
+      height: 300px;
+      width: 300px;
+    }
+    #about .about-image {
+      flex: 1 1 45%;
+      padding: 20px;
+      text-align: center;
+    }
+    #about .about-image img {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #d4af37;
+      border-radius: 10px;
+    }
+    /* Prices Section */
+    #prices {
+      background: rgba(221, 221, 221, 0.8);
+    }
+    .pricing-category {
+      margin: 20px 0;
+      padding: 20px;
+      border: 2px solid #d4af37;
+      background: rgba(245, 225, 199, 0.9);
+      border-radius: 10px;
+      font-family: 'MedievalSharp', cursive;
+    }
+    .pricing-category h2 {
+      margin-top: 0;
+      color: #d4af37;
+    }
+    .pricing-category ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .pricing-category li {
+      margin-bottom: 10px;
+    }
+    .pricing-category a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+    .pricing-category a:hover {
+      text-decoration: underline;
+    }
+    /* Gallery Section */
+    #gallery {
+      background: rgba(187, 187, 187, 0.8);
+      text-align: center;
+    }
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+    .gallery-item {
+      background: rgba(245, 225, 199, 0.8);
+      padding: 8px;
+      border: 2px solid #d4af37;
+      border-radius: 8px;
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    .gallery-item:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 8px;
+    }
+    .gallery-item figcaption {
+      font-family: 'MedievalSharp', cursive;
+      font-size: 1rem;
+      color: #333;
+      text-align: center;
+    }
+    /* Overlay for gallery image inspection */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      z-index: 2000;
+    }
+    #overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .overlay-content {
+      position: relative;
+      animation: grow 0.3s forwards;
+      text-align: center;
+    }
+    @keyframes grow {
+      from { transform: scale(0.8); }
+      to { transform: scale(1); }
+    }
+    .overlay-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+    #overlay img {
+      max-width: 90vw;
+      max-height: 80vh;
+    }
+    #overlay figcaption {
+      font-family: 'MedievalSharp', cursive;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-top: 10px;
+      opacity: 0.8;
+    }
+    @media (max-width: 768px) {
+      #about .about-contact-wrapper {
+        flex-direction: column;
+      }
+      #about .about-contact-text,
+      #about .about-image {
+        flex: 1 1 100%;
+      }
+      nav ul li {
+        margin: 10px 0;
+      }
+      .gallery-container {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="container">
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#prices">Prices</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Combined About & Contact Section -->
+  <section id="about">
+    <div class="container about-contact-wrapper">
+      <div class="about-contact-text">
+        <h1>About Us</h1>
+        <p>
+          Welcome, traveler! You’ve stepped into a workshop where creativity and imagination take form.
+          We are two brothers, each crafting unique visions in our own way—one with a brush, the other with pixels.
+          From hand-drawn characters full of life to custom-crafted Minecraft skins, we bring your vision into art.
+        </p>
+        <div class="contact-details">
+          <h2>Contact</h2>
+          <p>
+            If you want to make a comission, feel free to contact us on our discord.
+          </p>
+          <iframe class="discord" src="https://discordapp.com/widget?id=1274651899148111952&theme=dark"></iframe>
+        </div>
+      </div>
+      <div class="about-image">
+        <img src="lOGO.png" alt="Logo" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Prices Section -->
+  <section id="prices">
+    <div class="container">
+      <h1>Prices</h1>
+      <p>
+        "Every commission is as unique as the character it brings to life!
+        Pricing depends on the complexity of the design—be it a detailed illustration or a custom Minecraft skin.
+        Reach out with your idea, and we’ll provide a tailored quote. Quality craftsmanship and your satisfaction are our priorities!"
+      </p>
+      <p><em>Info:</em> Due to my location, I can only accept transfers via PayPal.</p>
+      <div class="pricing-category">
+        <h2>Minecraft Skins</h2>
+        <ul>
+          <li><strong>Commission - 16 USD:</strong> I can commission anything you desire, including armors, creatures, outfits, and dresses.</li>
+          <li><strong>Small Commission - 6-12 USD:</strong> For smaller commissions such as head commissions or color changes (price agreed upon beforehand).</li>
+        </ul>
+        <p><strong>Past Work:</strong> <a href="https://www.planetminecraft.com/member/ryn/" target="_blank">PMC page</a></p>
+      </div>
+      <div class="pricing-category">
+        <h2>Artworks</h2>
+        <ul>
+          <li><strong>Full Character - 24 USD:</strong> Full character art from head to toe with shading.</li>
+          <li><strong>Half Character - 16 USD:</strong> Half character art (torso and upwards).</li>
+          <li><strong>Item Artwork - 8 USD:</strong> Items such as swords, skulls, or other objects depending on complexity.</li>
+          <li><strong>Modifications - 8-16 USD:</strong> Artistic modifications to existing items, which could include colour changes, additional objects etc. (Price is agreed on before modification)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery">
+    <div class="container">
+      <h1>Gallery</h1>
+      <p>
+        Behold our noble characters – from the wise Elf Villager to the cheese-loving hero, and the ever-mischievous Gobbla Da Gobbler!
+      </p>
+      <div class="gallery-container">
+        <figure class="gallery-item">
+          <img src="ElfVillager.png" alt="Elf Villager" />
+          <figcaption>Elf Villager</figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <img src="GobblaDaGobbler.png" alt="Gobbla Da Gobbler" />
+          <figcaption>Gobbla Da Gobbler</figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <img src="ForTheLoveOfCheese.png" alt="For The Love Of Cheese" />
+          <figcaption>For The Love Of Cheese</figcaption>
+        </figure>
+      </div>
+      <div class="gallery-container">
+        <figure class="gallery-item">
+          <img src="screenshot-1724046780731.png" alt="King front" />
+          <figcaption>King front</figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <img src="screenshot-1724046796312.png" alt="King back" />
+          <figcaption>King back</figcaption>
+        </figure>
+      </div>
+      <div class="gallery-container">
+        <figure class="gallery-item multiple">
+          <img src="screenshot-1724873446976.png" alt="Blue Wanderer 1" />
+          <img src="screenshot-1724873471594.png" alt="Blue Wanderer 2" />
+          <figcaption>Blue Wanderer</figcaption>
+        </figure>
+        <figure class="gallery-item multiple">
+          <img src="screenshot-1739181848572.png" alt="Bat Monster 1" />
+          <img src="screenshot-1739182153488.png" alt="Bat Monster 2" />
+          <img src="screenshot-1739181848572.png" alt="Bat Monster 3" />
+          <figcaption>Bat Monster</figcaption>
+        </figure>
+        <figure class="gallery-item multiple">
+          <img src="screenshot-1724954423142.png" alt="Snow Elf 1" />
+          <img src="screenshot-1724954429950.png" alt="Snow Elf 2" />
+          <figcaption>Snow Elf</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Overlay -->
+  <div id="overlay">
+    <div class="overlay-content">
+      <span class="overlay-close">&times;</span>
+      <img id="overlay-image" src="" alt="Gallery Item" />
+      <figcaption id="overlay-caption"></figcaption>
+    </div>
+  </div>
+
+  <script>
+    // Adjust navbar display based on window height
+    function checkWindowHeight() {
+      const nav = document.getElementById('navbar');
+      nav.style.display = window.innerHeight < 400 ? 'none' : 'block';
+    }
+    window.addEventListener('resize', checkWindowHeight);
+    checkWindowHeight();
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const nav = document.getElementById('navbar');
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Section fade-in on scroll
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    sections.forEach(section => observer.observe(section));
+
+    // Dynamic tilt effect for gallery items
+    document.querySelectorAll('.gallery-item').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const cardWidth = rect.width;
+        const cardHeight = rect.height;
+        const centerX = rect.left + cardWidth / 2;
+        const centerY = rect.top + cardHeight / 2;
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const rotateY = ((mouseX - centerX) / (cardWidth / 2)) * 15;
+        const rotateX = -((mouseY - centerY) / (cardHeight / 2)) * 15;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+      });
+    });
+
+    // Gallery overlay logic
+    const overlay = document.getElementById('overlay');
+    const overlayImage = document.getElementById('overlay-image');
+    const overlayCaption = document.getElementById('overlay-caption');
+    const overlayClose = document.querySelector('.overlay-close');
+
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const img = item.querySelector('img');
+        const caption = item.querySelector('figcaption');
+        overlayImage.src = img.src;
+        overlayCaption.textContent = caption ? caption.textContent : '';
+        overlay.classList.add('visible');
+      });
+    });
+
+    overlayClose.addEventListener('click', () => {
+      overlay.classList.remove('visible');
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove('visible');
+      }
+    });
+  </script>
+</body>
+</html>
