@@ -166,9 +166,10 @@
     .gallery-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 15px;
+      gap: 2%;  /* Changed gap to a percentage value */
       margin-top: 30px;
     }
+
     .gallery-item {
       background: rgba(245, 225, 199, 0.8);
       padding: 8px;
@@ -257,7 +258,9 @@
       }
       .gallery-container {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 4%;  /* Increased gap for smaller screens */
       }
+
     }
   </style>
 </head>
