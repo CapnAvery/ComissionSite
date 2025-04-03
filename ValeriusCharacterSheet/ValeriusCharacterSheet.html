@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medieval Character Dictionary</title>
+  <!-- Gothic font -->
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <!-- Three.js and GLTFLoader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <style>
+    /* Base reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a; /* Dark background */
+      font-family: 'MedievalSharp', cursive;
+      line-height: 1.6;
+      padding: 20px;
+      color: #e0e0e0;
+      position: relative;
+      overflow: auto;
+    }
+    /* Canvas for falling particles */
+    #particleCanvas {
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+    header h1 {
+      font-size: 3.5em;
+      letter-spacing: 2px;
+      text-shadow: 5px 5px 15px #000, 0 0 20px #ff0000;
+      color: #a83232;
+      transform: skew(-10deg);
+    }
+    header p {
+      font-size: 1.2em;
+      color: #bbb;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+    .youtube-container {
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto 20px;
+    }
+    .youtube-container iframe {
+      width: 100%; height: 315px;
+      border: 3px solid #333; border-radius: 8px;
+    }
+    .content {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      background: rgba(20,20,20,0.95);
+      border: 2px solid #444;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.7);
+      position: relative;
+      z-index: 2;
+    }
+    .dictionary-entry {
+      margin-bottom: 40px;
+      border-bottom: 2px solid #444;
+      padding-bottom: 20px;
+    }
+    .dictionary-entry:last-child { border-bottom: none; }
+    .dictionary-entry h2 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #a83232;
+      text-shadow: 3px 3px 8px #000;
+      transform: skew(-10deg);
+    }
+    .dictionary-entry p {
+      margin-bottom: 10px;
+      color: #ccc;
+      font-size: 1.1em;
+    }
+    /* Container for the Minecraft model */
+    #minecraftContainer {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      border: 3px solid #444;
+      border-radius: 10px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    }
+    /* Image card style with 3D tilt effect */
+    .entry-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .card {
+      perspective: 1000px;
+      display: inline-block;
+      transition: transform 0.2s ease-out;
+    }
+    .card img {
+      width: 250px;
+      height: auto;
+      border: 3px solid #444;
+      border-radius: 10px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      transition: transform 0.2s ease-out;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 1em;
+      color: #bbb;
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas for falling particles -->
+  <canvas id="particleCanvas"></canvas>
+  <header>
+    <h1>Liber Mortis</h1>
+    <p>"a catalogue of those who defy the grave."</p>
+    <p>Written by Capn Avery for Valerius Radomavic</p>
+    <div class="youtube-container">
+      <!-- Replace with your actual YouTube embed URL -->
+      <iframe src="https://www.youtube.com/embed/CLAa1urufGE?start=0" allowfullscreen></iframe>
+    </div>
+  </header>
+  <div class="content">
+    <div class="dictionary-entry">
+      <h2>The Necrarch, Valerius Radomavic</h2>
+      <p>A seven foot tall corpse, animated by only the most hellish of experiments exists in a life in between the living and the dead—a makeshift vampiric Undead.
+        His body is sustained by an insatiable quest for blood, lifeforce, and knowledge beyond measure. Valerius stems from the Radomavic bloodline of vampires, a long and proud
+        lineage that began with Almaris by Vukosav Radomavic, the father of Vampirism. Sired by a great deceiver, he in turn embodies that trait.
+      </p>
+      <br><br>
+      <p>Valerius, however, unlike his progenitors, does not only relish in the shadows but thrives in the spotlight. He is typically at the forefront of a charge and is considered
+        a dangerous deceiver, capable of taking on different forms—orcish, human, elf, dwarf, and many more. Though little is known about his childhood or who he was before
+        he became Valerius, upon closer inspection one might conclude that his natural body is of orcish descent, though after years of war, battles, and flesh modifications,
+        hardly anything remains to support this theory.
+      </p>
+      <!-- Minecraft model container -->
+      <div id="minecraftContainer"></div>
+      <!-- Existing Image Card -->
+      <div class="entry-images">
+        <div class="card"><img src="Valerius.jpg" alt="Valerius"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- (Other content sections remain unchanged) -->
+  <div class="content">
+    <div class="dictionary-entry">
+      <h2>The Black Grail</h2>
+      <p>A most unholy of chalices—a golden skull hollowed out and encrusted with crimson rubies. At its center, a large ruby encases a mist-like substance,
+         reminiscent of clouds dancing across the sky, intermingled with streaks of black. Gazing upon this center ruby, one feels an overwhelming dread.
+      </p>
+      <br><br>
+      <div class="entry-images">
+        <div class="card"><img src="EvilChalice.jpg" alt="EvilChalice"></div>
+      </div>
+      <p>Codex Entry: From initial research, this is the oculus of Valerius; if it is broken, the undead will rebel, and if removed, they would lose command over their ranks.
+      </p>
+    </div>
+    <br><br>
+    <div class="dictionary-entry">
+        <h2>The Dreadguard of the Necrarch</h2>
+        <div class="entry-images">
+          <div class="card"><img src="Dreadknight.jpg" alt="Dreadguard"></div>
+        </div>
+        <br><br>
+        <p>The Unholy creation, it is said the Dreadguard were an elite force in the Radomavic Bloodline, buried in ceremonial tombs by the dozens. These were men and 
+            women who gave their lives for their lineage—only for their most holy tombs amongst vampiric kind to be ravaged, their unyielding service in life was not enough,
+            and they are to serve in unlife for as long as Valerius wills it.
+        </p>
+    </div>
+    <br><br>
+    <div class="dictionary-entry">
+        <h2>The Staff</h2>
+        <div class="entry-images">
+          <div class="card"><img src="UndeadStaff.jpg" alt="UndeadStaff"></div>
+        </div>
+        <br><br>
+        <p>Any mortal man deemed worthy enough to serve the Necrarch in life, but not worthy to ascend into a perfect unlife, is given the honor of being incorporated into 
+            the Necrarch's staff—adhering to their lord's command even if it grants them a second death. If one listens closely, one might hear a soft reverberation towards the Necrarch,
+            though this remains but a rumor.
+        </p>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="dictionary-entry">
+      <h2>The Rift and its Horrors</h2>
+      <p>Valerius is a capable necromancer and an even more adept magician. Having harnessed the powers of the Heith-Hadran, the Necrarch can open a temporary rift to that forsaken realm,
+        unleashing an army of the undead. Spectral monsters—tormented souls driven to insanity—emerge, their wills enslaved by the wicked Necrarch.
+      </p>
+      <br><br>
+      <div class="entry-images">
+        <div class="card"><img src="MagicalPortal.jpg" alt="MagicalPortal"></div>
+      </div>
+    </div>
+
+    <div class="dictionary-entry">
+        <h2>The Wailing Dead</h2>
+        <div class="entry-images">
+          <div class="card"><img src="CairnWraiths.jpg" alt="CairnWraiths"></div>
+          <div class="card"><img src="SkeletonMinion.jpg" alt="SkeletonMinion"></div>
+        </div>
+        <br><br>
+        <p>The undead brought forth by the rift amass in horrific numbers. Their forms twist and contort as the connection to the beyond remains unstable, yet they can be felled by any attack.
+        </p>
+      </div>
+  </div>
+  
+  <footer>
+    &copy; Done by Capn_Avery and Ryn. Visit us at:
+    <a href="https://capnavery.github.io/ComissionSite/Comissions/index.html#about" target="_blank" style="color: #bbb; text-decoration: underline;">Our Commission Site</a>
+  </footer>
+  
+  <script>
+    // Enhanced Canvas Particle Animation: Falling Ash, Burning Embers, and Drops of Wine
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let particles = [];
+    const particleCount = 150;
+    let width, height;
+    
+    function initCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
+    
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * -height;
+        this.size = Math.random() * 3 + 1;
+        this.speedY = Math.random() * 1 + 0.5;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.5 + 0.2;
+        // Randomly assign type: 0 = ash, 1 = ember, 2 = wine drop
+        this.type = Math.floor(Math.random() * 3);
+        if(this.type === 1) { this.size *= 1.2; this.speedY *= 1.5; }
+        else if(this.type === 2) { this.size *= 1.1; this.speedY *= 1.2; }
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.y > height) { this.reset(); this.y = 0; }
+      }
+      draw() {
+        if(this.type === 0) { // Ash
+          ctx.fillStyle = `rgba(120, 120, 120, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        } else if(this.type === 1) { // Ember
+          ctx.fillStyle = `rgba(255, 69, 0, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.ellipse(this.x, this.y, this.size, this.size * 1.5, Math.PI / 4, 0, Math.PI * 2);
+          ctx.fill();
+        } else { // Wine drop
+          ctx.fillStyle = `rgba(139, 0, 0, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+    
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); }
+    }
+    
+    function animateParticles() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    
+    initParticles();
+    animateParticles();
+    
+    // Card tilt effect: rotate cards toward the cursor
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const cardX = rect.left + rect.width / 2;
+        const cardY = rect.top + rect.height / 2;
+        const deltaX = e.clientX - cardX;
+        const deltaY = e.clientY - cardY;
+        const tiltX = deltaY / 8;
+        const tiltY = deltaX / 8;
+        card.style.transform = `rotateX(${-tiltX}deg) rotateY(${tiltY}deg)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = 'rotateX(0deg) rotateY(0deg)'; });
+    });
+    
+    // --- Three.js Minecraft Model from Blockbench ---
+      // --- Three.js Minecraft Model from Blockbench (using model.gltf) ---
+  const minecraftContainer = document.getElementById('minecraftContainer');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, minecraftContainer.clientWidth / minecraftContainer.clientHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(minecraftContainer.clientWidth, minecraftContainer.clientHeight);
+  minecraftContainer.appendChild(renderer.domElement);
+
+  // Load the glTF model exported from Blockbench.
+  const loader = new THREE.GLTFLoader();
+  let headObject = null;
+  loader.load('model.gltf', (gltf) => {
+    const model = gltf.scene;
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(1, 1, 1).normalize();
+    scene.add(light);
+
+    scene.add(model);
+    // Optionally, adjust model position and scale as needed:
+    model.position.set(0, -1, 0);
+    model.rotation.y = Math.PI; // 180 degrees
+    model.scale.set(1, 1, 1);
+    // Find the head object (adjust "Head" to match your model's head object name)
+    headObject = model.getObjectByName("Head");
+    if (!headObject) {
+      // Fallback: if no distinct head is found, use the entire model.
+      headObject = model;
+    }
+  }, undefined, (error) => {
+    console.error('Error loading model:', error);
+  });
+
+  // Position the camera so the model is visible.
+  camera.position.z = 5;
+
+  // Track mouse movement within the minecraftContainer.
+  let mouseX = 0, mouseY = 0;
+  minecraftContainer.addEventListener('mousemove', (event) => {
+    const rect = minecraftContainer.getBoundingClientRect();
+    mouseX = ((event.clientX - rect.left) / minecraftContainer.clientWidth) * 2 - 1;
+    mouseY = -((event.clientY - rect.top) / minecraftContainer.clientHeight) * 2 + 1;
+  });
+
+  function animateMinecraft() {
+    requestAnimationFrame(animateMinecraft);
+    // Rotate the head object toward the cursor.
+    if (headObject) {
+      headObject.rotation.y = -mouseX * Math.PI * 0.3;
+      headObject.rotation.x = mouseY * Math.PI * 0.3;
+    }
+    renderer.render(scene, camera);
+  }
+  animateMinecraft();
+  </script>
+</body>
+</html>
